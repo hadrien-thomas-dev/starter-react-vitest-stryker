@@ -79,7 +79,7 @@ Run `npm audit` for details.
   ➜  press h + enter to show help
 ```
 
-`npm install -D vitest @testing-library/react @testing-library/jest-dom jsdom`
+`npm install --save-dev vitest @testing-library/react jsdom`
 
 Edit **package.json** in root folder
 ```json
@@ -160,4 +160,93 @@ test('increments counter on click', () => {
 
   expect(button.textContent).toBe('count is 1')
 })
+```
+
+`npm install --save-dev @stryker-mutator/core @stryker-mutator/vitest-runner @stryker-mutator/typescript-checker`
+
+Edit **package.json** in root folder
+```json
+{
+  "name": "starter-react-vitest-stryker",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "test": "vitest",
+    "mutation": "stryker run", // 🚨
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@stryker-mutator/core": "^9.5.1",
+    "@stryker-mutator/typescript-checker": "^9.5.1",
+    "@stryker-mutator/vitest-runner": "^9.5.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.1",
+    "eslint": "^9.39.1",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.24",
+    "globals": "^16.5.0",
+    "jsdom": "^28.1.0",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.48.0",
+    "vite": "^7.3.1",
+    "vitest": "^4.0.18"
+  }
+}
+```
+
+Create file **stryker.config.json** in root folder
+```json
+{
+    "checkers": [
+        "typescript"
+    ],
+    "tsconfigFile": "tsconfig.json"
+}
+```
+
+`npm run mutation`
+```bash
+npm run mutation
+
+> starter-react-vitest-stryker@0.0.0 mutation
+> stryker run
+
+09:59:46 (24524) INFO ProjectReader Found 2 of 19 file(s) to be mutated.
+09:59:46 (24524) INFO Instrumenter Instrumented 2 source file(s) with 5 mutant(s)
+09:59:46 (24524) INFO ConcurrencyTokenProvider Creating 10 checker process(es) and 9 test runner process(es).
+10:00:01 (24524) INFO DryRunExecutor Starting initial test run (command test runner with "perTest" coverage analysis). This may take a while.
+10:00:03 (24524) INFO DryRunExecutor Initial test run succeeded. Ran 1 tests in 2 seconds (net 2372 ms, overhead 1 ms).
+Mutation testing  [=====================] 100% (elapsed: <1m, remaining: n/a) 5/5 Mutants tested (1 survived, 0 timed out)
+
+All tests
+  ✓ All tests (killed 2)
+
+[Survived] StringLiteral
+src/main.tsx:6:36
+-   createRoot(document.getElementById('root')!).render(
++   createRoot(document.getElementById("")!).render(
+
+Ran 0.60 tests per mutant on average.
+----------|------------------|----------|-----------|------------|----------|----------|
+          | % Mutation score |          |           |            |          |          |
+File      |  total | covered | # killed | # timeout | # survived | # no cov | # errors |
+----------|--------|---------|----------|-----------|------------|----------|----------|
+All files |  66.67 |   66.67 |        2 |         0 |          1 |        0 |        2 |
+ App.tsx  | 100.00 |  100.00 |        2 |         0 |          0 |        0 |        2 |
+ main.tsx |   0.00 |    0.00 |        0 |         0 |          1 |        0 |        0 |
+----------|--------|---------|----------|-----------|------------|----------|----------|
+10:00:08 (24524) INFO HtmlReporter Your report can be found at: file:///C:/Users/thoma/projects/perso/tests_sandbox/starter-react-vitest-stryker/reports/mutation/mutation.html
+10:00:08 (24524) INFO MutationTestExecutor Done in 22 seconds.
 ```
