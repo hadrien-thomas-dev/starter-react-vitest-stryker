@@ -78,3 +78,86 @@ Run `npm audit` for details.
   ➜  Network: use --host to expose
   ➜  press h + enter to show help
 ```
+
+`npm install -D vitest @testing-library/react @testing-library/jest-dom jsdom`
+
+Edit **package.json** in root folder
+```json
+{
+  "name": "starter-react-vitest-stryker",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "test": "vitest", // 🚨
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.1",
+    "eslint": "^9.39.1",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.24",
+    "globals": "^16.5.0",
+    "jsdom": "^28.1.0",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.48.0",
+    "vite": "^7.3.1",
+    "vitest": "^4.0.18"
+  }
+}
+
+```
+
+Create the **vitest.config.ts** in root folder
+```ts
+import { defineConfig } from 'vitest/config'
+import react from '@vitejs/plugin-react'
+
+export default defineConfig({
+  plugins: [react()],
+  test: {
+    environment: 'jsdom',
+    globals: true,
+  },
+})
+```
+
+Create the file **App.test.tsx** in src folder
+```tsx
+import { render, screen, fireEvent } from '@testing-library/react'
+import App from './App'
+import { test, expect } from 'vitest'
+import { vi } from 'vitest'
+
+// Mock static assets to prevent path errors
+vi.mock('/vite.svg', () => ({ default: 'vite-logo' }))
+vi.mock('/react.svg', () => ({ default: 'react-logo' }))
+
+test('renders title and initial counter', () => {
+  render(<App />)
+  expect(screen.getByText(/Vite \+ React/i)).toBeDefined()
+  expect(screen.getByRole('button').textContent).toBe('count is 0')
+})
+
+test('increments counter on click', () => {
+  render(<App />)
+  const button = screen.getByRole('button')
+
+  fireEvent.click(button)
+
+  expect(button.textContent).toBe('count is 1')
+})
+```
