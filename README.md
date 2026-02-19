@@ -250,3 +250,5 @@ All files |  66.67 |   66.67 |        2 |         0 |          1 |        0 |   
 10:00:08 (24524) INFO HtmlReporter Your report can be found at: file:///C:/Users/thoma/projects/perso/tests_sandbox/starter-react-vitest-stryker/reports/mutation/mutation.html
 10:00:08 (24524) INFO MutationTestExecutor Done in 22 seconds.
 ```
+
+[Setup github pipeline and stryker dashboard](STRYKER-DASHBOARD.md)
